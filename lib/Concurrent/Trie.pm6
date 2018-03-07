@@ -13,13 +13,18 @@ class Concurrent::Trie {
 
         method clone-with-chars(@chars) {
             if @chars {
-                if %!children{@chars[0]}:exists {
-                    die "update NYI"
+                my $first = @chars[0];
+                my @rest := @chars[1..*];
+                if %!children{$first}:exists {
+                    self.clone: children => {
+                        %!children,
+                        $first => %!children{$first}.clone-with-chars(@rest)
+                    }
                 }
                 else {
                     self.clone: children => {
                         %!children,
-                        @chars[0] => EMPTY.clone-with-chars(@chars[1..*])
+                        @chars[0] => EMPTY.clone-with-chars(@rest)
                     }
                 }
             }
