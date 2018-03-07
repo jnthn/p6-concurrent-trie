@@ -1,6 +1,6 @@
 class Concurrent::Trie {
     my class Node {
-        has Node %.children{Str};
+        has %.children;
         has Bool $.is-entry;
     
         my \EMPTY = Node.new;
