@@ -14,7 +14,7 @@ class Concurrent::Trie {
         method clone-with-chars(@chars) {
             if @chars {
                 my $first = @chars[0];
-                my @rest := @chars[1..*];
+                my @rest = @chars.tail(*-1);
                 if %!children{$first}:exists {
                     self.clone: children => {
                         %!children,
