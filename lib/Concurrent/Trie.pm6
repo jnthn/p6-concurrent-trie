@@ -24,12 +24,12 @@ class Concurrent::Trie {
                 else {
                     self.clone: children => {
                         %!children,
-                        @chars[0] => EMPTY.clone-with-chars(@rest)
+                        $first => EMPTY.clone-with-chars(@rest)
                     }
                 }
             }
             else {
-                self.clone(:is-entry)
+                self.clone: :is-entry
             }
         }
     }
