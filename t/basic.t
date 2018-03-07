@@ -45,4 +45,36 @@ given Concurrent::Trie.new -> $ct {
         'No duplication in entries list';
 }
 
+given Concurrent::Trie.new -> $ct {
+    my @inserted;
+    lives-ok
+        {
+            for ^1000 {
+                my $random = (|(('a'..'z').pick, ('A'..'Z').pick) xx (1..5).pick).join;
+                $ct.insert($random);
+                unless $ct.contains($random) {
+                    diag "Oops, inserted $random is missing";
+                    die;
+                }
+                @inserted.push($random);
+            }
+        },
+        'Completed 1000 random inserts, and correct contains result for all';
+
+    @inserted .= unique;
+    lives-ok
+        {
+            for @inserted {
+                unless $ct.contains($_) {
+                    diag "Oops, in post-check $_ has gone missing";
+                    die;
+                }
+            }
+        },
+        'All the inserts are still there afterwards';
+
+    is-deeply $ct.entries.sort, @inserted.sort,
+        'The entries list contains all the inserted data also';
+}
+
 done-testing;
