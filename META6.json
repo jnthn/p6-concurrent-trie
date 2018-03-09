@@ -2,7 +2,7 @@
     "perl"          : "6.*",
     "name"          : "Concurrent::Trie",
     "version"       : "1.0",
-    "description"   : "A lock-free concurrent trie (Text RetrIEval) data structure.",
+    "description"   : "A lock-free concurrent trie (Text Retrieval) data structure.",
     "authors"       : [ "Jonathan Worthington <jnthn@jnthn.net>" ],
     "license"       : "Artistic-2.0",
     "depends"       : [ ],
