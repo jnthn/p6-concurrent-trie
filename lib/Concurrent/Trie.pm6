@@ -1,4 +1,6 @@
 class Concurrent::Trie {
+    my class AlreadyInserted is Exception { }
+
     my class Node {
         has %.children;
         has Bool $.is-entry;
@@ -28,6 +30,9 @@ class Concurrent::Trie {
                     }
                 }
             }
+            elsif $!is-entry {
+                die AlreadyInserted.new;
+            }
             else {
                 self.clone: :is-entry
             }
@@ -35,11 +40,19 @@ class Concurrent::Trie {
     }
 
     has Node $!root = Node.EMPTY;
+    has atomicint $!elems;
 
     method insert(Str:D $value --> Nil) {
         if $value {
             my @chars = $value.comb;
             cas $!root, { .clone-with-chars(@chars) }
+            $!elems⚛++;
+            CATCH {
+                when AlreadyInserted {
+                    # Not a problem, exception is just to escape from the
+                    # update attempt and not bump $!elems.
+                }
+            }
         }
     }
 
@@ -69,5 +82,13 @@ class Concurrent::Trie {
         for $current.children.kv -> $char, $child {
             entry-walk("$prefix$char", $child);
         }
+    }
+
+    multi method elems(Concurrent::Trie:D: --> Int) {
+        $!elems
+    }
+
+    multi method Bool(Concurrent::Trie:D: --> Bool) {
+        $!elems != 0
     }
 }

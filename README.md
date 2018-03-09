@@ -8,12 +8,17 @@ A lock-free trie (Text Retrieval) data structure, safe for concurrent use.
 
     my $trie = Concurrent::Trie.new;
     say $trie.contains('brie');         # False
+    say so $trie;                       # False
+    say $trie.elems;                    # 0
 
     $trie.insert('brie');
     say $trie.contains('brie');         # True
+    say so $trie;                       # True
+    say $trie.elems;                    # 1
 
     $trie.insert('babybel');
     $trie.insert('gorgonzola');
+    say $trie.elems;                    # 3
     say $trie.entries();                # (gorgonzola babybel brie)
     say $trie.entries('b');             # (babybel brie)
 
@@ -57,3 +62,13 @@ results is not defined.
 
 The results will be a snapshot of what was in the trie at the point `entries`
 was called; additions after that point will not be in the `entries` list.
+
+### elems(--> Int)
+
+Gets the number of entries in the trie. The data structure maintains a count,
+making this O(1) (as opposed to `$trie.entries.elems`, which would be O(n)).
+
+### Bool()
+
+Returns `True` if the number of entries in the trie is non-zero, and `False`
+otherwise.

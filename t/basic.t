@@ -7,12 +7,16 @@ given Concurrent::Trie.new -> $ct {
     is-deeply $ct.entries.list, (), 'No entries in empty Trie';
     is-deeply $ct.entries('').list, (), '...even with empty prefix';
     is-deeply $ct.entries('x').list, (), '...and especially with non-empty prefix';
+    is $ct.elems, 0, 'Empty Trie has 0 elems';
+    nok $ct, 'Emptry Trie is falsey';
 
     lives-ok { $ct.insert('a') }, 'Can insert one-char string to trie';
     ok $ct.contains('a'), 'Now contains that one-char string';
     nok $ct.contains('b'), 'Does not contain a different one-char string';
     nok $ct.contains('ab'),
         'Does not contain a two-char string with prefix of the one we added';
+    is $ct.elems, 1, 'Trie now has 1 element';
+    ok $ct, 'Trie is now truthy';
     is-deeply $ct.entries.list, ('a',), 'Correct entries result';
     is-deeply $ct.entries('a'), ('a',), 'Correct entries result with prefix match';
     is-deeply $ct.entries('aa'), (), 'No entries for prefix non-match (1)';
@@ -39,10 +43,14 @@ given Concurrent::Trie.new -> $ct {
     ok $ct.contains('wx'), 'That prefix is now reported as being contained';
     is-deeply $ct.entries.sort.list, ('a', 'abc', 'wx', 'wxyz'),
         'Have all 4 entries in entries list';
+    is $ct.elems, 4, 'Trie now has 4 elements';
+    ok $ct, 'Trie is still truthy';
 
     lives-ok { $ct.insert('wxyz') }, 'Adding entry already in there works';
     is-deeply $ct.entries.sort.list, ('a', 'abc', 'wx', 'wxyz'),
         'No duplication in entries list';
+    is $ct.elems, 4, 'Re-insertion of existing entry does not increase elems';
+    ok $ct, 'Trie is still truthy';
 }
 
 given Concurrent::Trie.new -> $ct {
