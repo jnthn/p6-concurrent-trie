@@ -10,5 +10,6 @@
         "Concurrent::Trie": "lib/Concurrent/Trie.pm6"
     },
     "resources": [],
+    "tags": ["trie", "text", "concurrent"],
     "source-url"    : "https://github.com/jnthn/p6-concurrent-trie.git"
 }
