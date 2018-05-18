@@ -7,7 +7,7 @@
     "license"       : "Artistic-2.0",
     "depends"       : [ ],
     "provides"      : {
-        "Concurrent::Stack": "lib/Concurrent/Trie.pm6"
+        "Concurrent::Trie": "lib/Concurrent/Trie.pm6"
     },
     "resources": [],
     "source-url"    : "https://github.com/jnthn/p6-concurrent-trie.git"
